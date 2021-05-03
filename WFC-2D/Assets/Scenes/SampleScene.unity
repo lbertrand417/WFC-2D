@@ -155,6 +155,7 @@ MonoBehaviour:
   rows: 5
   cols: 8
   tileSize: 1
+  referenceTile: {fileID: 2835420505630800498, guid: d9ca79bff1bf15d49b06c87e3812e4ec, type: 3}
 --- !u!4 &40811979
 Transform:
   m_ObjectHideFlags: 0
