@@ -3,6 +3,8 @@ using System.IO;
 using System.Collections;
 using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine.Tilemaps;
+using Unity.VisualScripting;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -14,121 +16,37 @@ public class MyTilePainter : MonoBehaviour
 	public int gridsize = 1;
 	private int width = 5;
 	private int height = 5;
-	public GameObject tiles;
-	private bool _changed = true;
 	public Vector3 cursor;
 	public bool focused = false; // Display the red lines if true
-	public GameObject[,] tileobs;
+	public GameObject[] tileobs;
 
 
-	int colidx = 0;
-	//public List<UnityEngine.Object> palette = new List<UnityEngine.Object>();
 	public UnityEngine.Object color = null;
-	Quaternion color_rotation;
-
 
 #if UNITY_EDITOR
 
-	private static bool IsAssetAFolder(UnityEngine.Object obj)
-	{
-		string path = "";
-		if (obj == null) { return false; }
-		path = AssetDatabase.GetAssetPath(obj.GetInstanceID());
-		if (path.Length > 0)
-		{
-			if (Directory.Exists(path))
-			{
-				return true;
-			}
-			else
-			{
-				return false;
-			}
-		}
-		return false;
-	}
-
-	static GameObject CreatePrefab(UnityEngine.Object fab, Vector3 pos, Quaternion rot)
+	static GameObject CreatePrefab(UnityEngine.Object fab, Vector3 pos)
 	{
 		GameObject o = PrefabUtility.InstantiatePrefab(fab as GameObject) as GameObject;
-		if (o == null)
-		{
-			Debug.Log(IsAssetAFolder(fab));
-			return o;
-		}
 		o.transform.position = pos;
-		o.transform.rotation = rot;
 		return o;
 	}
 
 	public void Restore()
 	{
 
-		/*Transform palt = transform.Find("palette");
-		if (palt != null) { GameObject.DestroyImmediate(palt.gameObject); }
-		GameObject pal = new GameObject("palette");
-		pal.hideFlags = HideFlags.HideInHierarchy;
-		BoxCollider bc = pal.AddComponent<BoxCollider>();
-		bc.size = new Vector3(palette.Count * gridsize, gridsize, 0f);
-		bc.center = new Vector3((palette.Count - 1f) * gridsize * 0.5f, 0f, 0f);
-
-		pal.transform.parent = this.gameObject.transform;
-		pal.transform.localPosition = new Vector3(0f, -gridsize * 2, 0f);
-		pal.transform.rotation = transform.rotation;
-
-
-
-		int palette_folder = -1;
-
-		for (int i = 0; i < palette.Count; i++)
-		{
-			UnityEngine.Object o = palette[i];
-			if (IsAssetAFolder(o))
-			{
-				palette_folder = i;
-			}
-			else
-			{
-				if (o != null)
-				{
-					GameObject g = CreatePrefab(o, new Vector3(), transform.rotation);
-					g.transform.parent = pal.transform;
-					g.transform.localPosition = new Vector3(i * gridsize, 0f, 0f);
-				}
-			}
-		}
-
-		if (palette_folder != -1)
-		{
-			string path = AssetDatabase.GetAssetPath(palette[palette_folder].GetInstanceID());
-			path = path.Trim().Replace("Assets/Resources/", "");
-			palette.RemoveAt(palette_folder);
-			UnityEngine.Object[] contents = (UnityEngine.Object[])Resources.LoadAll(path);
-			foreach (UnityEngine.Object o in contents)
-			{
-				if (!palette.Contains(o)) { palette.Add(o); }
-			}
-			Restore();
-		}*/
-
-		tileobs = new GameObject[width, height];
-		if (tiles == null)
-		{
-			tiles = new GameObject("tiles");
-			tiles.transform.parent = this.gameObject.transform;
-			tiles.transform.localPosition = new Vector3();
-		}
-		int cnt = tiles.transform.childCount;
+		tileobs = new GameObject[width * height];
+		int cnt = this.gameObject.transform.childCount;
 		List<GameObject> trash = new List<GameObject>();
 		for (int i = 0; i < cnt; i++)
 		{
-			GameObject tile = tiles.transform.GetChild(i).gameObject;
+			GameObject tile = this.gameObject.transform.GetChild(i).gameObject;
 			Vector3 tilepos = tile.transform.localPosition;
 			int X = (int)(tilepos.x / gridsize);
 			int Y = (int)(tilepos.y / gridsize);
 			if (ValidCoords(X, Y))
 			{
-				tileobs[X, Y] = tile;
+				tileobs[X + width * Y] = tile;
 			}
 			else
 			{
@@ -138,24 +56,6 @@ public class MyTilePainter : MonoBehaviour
 		for (int i = 0; i < trash.Count; i++)
 		{
 			if (Application.isPlaying) { Destroy(trash[i]); } else { DestroyImmediate(trash[i]); }
-		}
-
-		/*if (color == null)
-		{
-			if (palette.Count > 0)
-			{
-				color = palette[0];
-			}
-		}*/
-	}
-
-	public void Resize()
-	{
-		transform.localScale = new Vector3(1, 1, 1);
-		if (_changed)
-		{
-			_changed = false;
-			Restore();
 		}
 	}
 
@@ -171,7 +71,6 @@ public class MyTilePainter : MonoBehaviour
 
 	void OnValidate()
 	{
-		_changed = true;
 		BoxCollider bounds = this.GetComponent<BoxCollider>();
 		bounds.center = new Vector3((width * gridsize) * 0.5f - gridsize * 0.5f, (height * gridsize) * 0.5f - gridsize * 0.5f, 0f);
 		bounds.size = new Vector3(width * gridsize, (height * gridsize), 0f);
@@ -187,30 +86,7 @@ public class MyTilePainter : MonoBehaviour
 	{
 		if (tileobs == null) { return false; }
 
-		return (x >= 0 && y >= 0 && x < tileobs.GetLength(0) && y < tileobs.GetLength(1));
-	}
-
-
-	public void CycleColor()
-	{
-		colidx += 1;
-		/*if (colidx >= palette.Count)
-		{
-			colidx = 0;
-		}
-		color = (UnityEngine.Object)palette[colidx];*/
-	}
-
-	public void Turn()
-	{
-		if (this.ValidCoords((int)cursor.x, (int)cursor.y))
-		{
-			GameObject o = tileobs[(int)cursor.x, (int)cursor.y];
-			if (o != null)
-			{
-				o.transform.Rotate(0f, 0f, 90f);
-			}
-		}
+		return (x >= 0 && y >= 0 && x < width && y < height);
 	}
 
 	public Vector3 Local(Vector3 p)
@@ -218,76 +94,35 @@ public class MyTilePainter : MonoBehaviour
 		return this.transform.TransformPoint(p);
 	}
 
-	public UnityEngine.Object PrefabSource(GameObject o)
-	{
-		if (o == null)
-		{
-			return null;
-		}
-		UnityEngine.Object fab = PrefabUtility.GetCorrespondingObjectFromSource(o);
-		if (fab == null)
-		{
-			fab = Resources.Load(o.name);
-		}
-		/*if (fab == null)
-		{
-			fab = palette[0];
-		}*/
-		return fab;
-	}
-
 	public void Drag(Vector3 mouse, MyTileLayerEditor.TileOperation op)
 	{
-		Resize();
-		if (tileobs == null) { Restore(); }
+		if (tileobs == null | tileobs.Length == 0) {
+			Restore(); }
 		if (this.ValidCoords((int)cursor.x, (int)cursor.y))
 		{
-			if (op == MyTileLayerEditor.TileOperation.Sampling)
+			DestroyImmediate(tileobs[(int)cursor.x + width * (int)cursor.y]);
+			if (op == MyTileLayerEditor.TileOperation.Drawing)
 			{
-				UnityEngine.Object s = PrefabSource(tileobs[(int)cursor.x, (int)cursor.y]);
-				Debug.Log(s);
-				if (s != null)
-				{
-					color = s;
-					color_rotation = tileobs[(int)cursor.x, (int)cursor.y].transform.localRotation;
-				}
-			}
-			else
-			{
-				DestroyImmediate(tileobs[(int)cursor.x, (int)cursor.y]);
-				if (op == MyTileLayerEditor.TileOperation.Drawing)
-				{
-					if (color == null) { return; }
-					GameObject o = CreatePrefab(color, new Vector3(), color_rotation);
-					o.transform.parent = tiles.transform;
-					o.transform.localPosition = (cursor * gridsize);
-					o.transform.localRotation = color_rotation;
-					tileobs[(int)cursor.x, (int)cursor.y] = o;
-				}
+				if (color == null) { return; }
+				GameObject o = CreatePrefab(color, new Vector3());
+				o.transform.parent = this.gameObject.transform;
+				o.transform.localPosition = (cursor * gridsize);
+				tileobs[(int)cursor.x + width * (int)cursor.y] = o;
 			}
 		}
-		/*else
-		{
-			if (op == MyTileLayerEditor.TileOperation.Sampling)
-			{
-				if (cursor.y == -1 && cursor.x >= 0 && cursor.x < palette.Count)
-				{
-					color = palette[(int)cursor.x];
-					color_rotation = Quaternion.identity;
-				}
-			}
-		}*/
 	}
 
 	public void Clear()
 	{
-		tileobs = new GameObject[width, height];
-		DestroyImmediate(tiles);
-		tiles = new GameObject("tiles");
-		tiles.transform.parent = gameObject.transform;
-		tiles.transform.localPosition = new Vector3();
+		tileobs = new GameObject[width * height];
+		int childs = this.gameObject.transform.childCount;
+		for (int i = childs - 1; i >= 0; i--)
+		{
+			DestroyImmediate(this.gameObject.transform.GetChild(i).gameObject);
+		}
 	}
 
+	// To draw the red lines
 	public void OnDrawGizmos()
 	{
 		Gizmos.color = Color.white;
@@ -312,19 +147,14 @@ public class MyTilePainter : MonoBehaviour
 [CustomEditor(typeof(MyTilePainter))]
 public class MyTileLayerEditor : Editor
 {
-	public enum TileOperation { None, Drawing, Erasing, Sampling };
+	public enum TileOperation { None, Drawing};
 	private TileOperation operation;
 
 	public override void OnInspectorGUI()
 	{
 		MyTilePainter me = (MyTilePainter) target;
 		GUILayout.Label("Assign a prefab to the color property");
-		GUILayout.Label("or the pallete array.");
 		GUILayout.Label("drag        : paint tiles");
-		GUILayout.Label("[s]+click  : sample tile color");
-		GUILayout.Label("[x]+drag  : erase tiles");
-		GUILayout.Label("[space]    : rotate tile");
-		GUILayout.Label("[b]          : cycle color");
 		if (GUILayout.Button("CLEAR"))
 		{
 			me.Clear();
@@ -341,7 +171,7 @@ public class MyTileLayerEditor : Editor
 		if (Physics.Raycast(HandleUtility.GUIPointToWorldRay(Event.current.mousePosition), out hit, Mathf.Infinity) &&
 				hit.collider.GetComponentInParent<MyTilePainter>() == me)
 		{
-			// Display the red line on the cursor
+			// Autorize the display of the red line on the cursor
 			me.cursor = me.GridV3(hit.point);
 			me.focused = true;
 
@@ -365,25 +195,10 @@ public class MyTileLayerEditor : Editor
 			bool leftbutton = (current.button == 0);
 			switch (current.type)
 			{
-				case EventType.KeyDown:
-
-					if (current.keyCode == KeyCode.S) operation = TileOperation.Sampling;
-					if (current.keyCode == KeyCode.X) operation = TileOperation.Erasing;
-					current.Use();
-					return;
-				case EventType.KeyUp:
-					operation = TileOperation.None;
-					if (current.keyCode == KeyCode.Space) me.Turn();
-					if (current.keyCode == KeyCode.B) me.CycleColor();
-					current.Use();
-					return;
 				case EventType.MouseDown:
 					if (leftbutton)
 					{
-						if (operation == TileOperation.None)
-						{
-							operation = TileOperation.Drawing;
-						}
+						operation = TileOperation.Drawing;
 						me.Drag(current.mousePosition, operation);
 
 						current.Use();
@@ -411,7 +226,6 @@ public class MyTileLayerEditor : Editor
 					}
 					break;
 				case EventType.MouseMove:
-					me.Resize();
 					current.Use();
 					break;
 				case EventType.Repaint:

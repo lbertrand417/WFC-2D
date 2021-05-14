@@ -4,5 +4,10 @@ using UnityEngine;
 
 public class Tuile : MonoBehaviour
 {
-    public string name;
+    public string newname;
+
+    public Tuile(string _name)
+    {
+        newname = _name;
+    }
 }
