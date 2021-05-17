@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class Tuile : MonoBehaviour
 {
-    public string newname;
+    public string tilename;
 
     public Tuile(string _name)
     {
-        newname = _name;
+        tilename = _name;
     }
 }

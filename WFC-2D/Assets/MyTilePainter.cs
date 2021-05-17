@@ -13,21 +13,21 @@ using UnityEditor;
 public class MyTilePainter : MonoBehaviour
 {
 
-	public int gridsize = 1;
-	private int width = 5;
-	private int height = 5;
+	private int gridsize = 1; // Size of one tile in the canvas
+	private int width = 5; // Width of the canvas
+	private int height = 5; // Height of the canvas
 	public Vector3 cursor;
 	public bool focused = false; // Display the red lines if true
-	public GameObject[] tileobs;
+	public Tuile[] tileobs;
 
 
-	public UnityEngine.Object color = null;
+	public Tuile currentTile = null;
 
 #if UNITY_EDITOR
 
-	static GameObject CreatePrefab(UnityEngine.Object fab, Vector3 pos)
+	static Tuile CreatePrefab(Tuile newtile, Vector2 pos)
 	{
-		GameObject o = PrefabUtility.InstantiatePrefab(fab as GameObject) as GameObject;
+		Tuile o = Instantiate(newtile);
 		o.transform.position = pos;
 		return o;
 	}
@@ -35,12 +35,12 @@ public class MyTilePainter : MonoBehaviour
 	public void Restore()
 	{
 
-		tileobs = new GameObject[width * height];
+		tileobs = new Tuile[width * height];
 		int cnt = this.gameObject.transform.childCount;
-		List<GameObject> trash = new List<GameObject>();
+		List<Tuile> trash = new List<Tuile>();
 		for (int i = 0; i < cnt; i++)
 		{
-			GameObject tile = this.gameObject.transform.GetChild(i).gameObject;
+			Tuile tile = this.gameObject.transform.GetChild(i).gameObject.GetComponent<Tuile>();
 			Vector3 tilepos = tile.transform.localPosition;
 			int X = (int)(tilepos.x / gridsize);
 			int Y = (int)(tilepos.y / gridsize);
@@ -96,15 +96,26 @@ public class MyTilePainter : MonoBehaviour
 
 	public void Drag(Vector3 mouse, MyTileLayerEditor.TileOperation op)
 	{
+		// Initialization if t wasn't done before
 		if (tileobs == null | tileobs.Length == 0) {
 			Restore(); }
+
+		// If the cursor is inside the canvas
 		if (this.ValidCoords((int)cursor.x, (int)cursor.y))
 		{
+			// Destroy the previous tile if it exists (doesn't work...)
+			Debug.Log((int)cursor.x + width * (int)cursor.y);
+			Debug.Log(tileobs[(int)cursor.x + width * (int)cursor.y]);
 			DestroyImmediate(tileobs[(int)cursor.x + width * (int)cursor.y]);
+
+			// If drawing mode
 			if (op == MyTileLayerEditor.TileOperation.Drawing)
 			{
-				if (color == null) { return; }
-				GameObject o = CreatePrefab(color, new Vector3());
+				// If no tile selected do nothing
+				if (currentTile == null) { return; }
+
+				// Create the object
+				Tuile o = CreatePrefab(currentTile, new Vector2());
 				o.transform.parent = this.gameObject.transform;
 				o.transform.localPosition = (cursor * gridsize);
 				tileobs[(int)cursor.x + width * (int)cursor.y] = o;
@@ -114,7 +125,8 @@ public class MyTilePainter : MonoBehaviour
 
 	public void Clear()
 	{
-		tileobs = new GameObject[width * height];
+		// Reset and delete all objects
+		tileobs = new Tuile[width * height];
 		int childs = this.gameObject.transform.childCount;
 		for (int i = childs - 1; i >= 0; i--)
 		{
@@ -122,17 +134,20 @@ public class MyTilePainter : MonoBehaviour
 		}
 	}
 
-	// To draw the red lines
 	public void OnDrawGizmos()
 	{
+		// Canvas border is white
 		Gizmos.color = Color.white;
 		Gizmos.matrix = transform.localToWorldMatrix;
 		if (focused)
 		{
+			// Draw red lines
 			Gizmos.color = new Color(1f, 0f, 0f, 0.6f);
 			Gizmos.DrawRay((cursor * gridsize) + Vector3.forward * -49999f, Vector3.forward * 99999f);
 			Gizmos.DrawRay((cursor * gridsize) + Vector3.right * -49999f, Vector3.right * 99999f);
 			Gizmos.DrawRay((cursor * gridsize) + Vector3.up * -49999f, Vector3.up * 99999f);
+
+			// Canvas border is yellow
 			Gizmos.color = Color.yellow;
 		}
 
@@ -153,7 +168,7 @@ public class MyTileLayerEditor : Editor
 	public override void OnInspectorGUI()
 	{
 		MyTilePainter me = (MyTilePainter) target;
-		GUILayout.Label("Assign a prefab to the color property");
+		GUILayout.Label("Assign a prefab to the tile object");
 		GUILayout.Label("drag        : paint tiles");
 		if (GUILayout.Button("CLEAR"))
 		{
