@@ -24,7 +24,7 @@ public class GridManager : MonoBehaviour
 
     private void GenerateGrid()
     {
-        //GameObject referenceTile = (GameObject)Instantiate(Resources.Load("grass_tile"));
+        //GameObject referenceTile = (GameObject) Instantiate(Resources.Load("grass_tile"));
         for (int row = 0; row < rows; row++)
         {
             for (int col = 0; col < cols; col++)

@@ -4,15 +4,10 @@ using UnityEngine;
 
 public class Tuile : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    public string tilename;
 
-    // Update is called once per frame
-    void Update()
+    public Tuile(string _name)
     {
-        
+        tilename = _name;
     }
 }
