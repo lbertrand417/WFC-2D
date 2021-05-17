@@ -16,58 +16,23 @@ public class MyTilePainter : MonoBehaviour
 	private int gridsize = 1; // Size of one tile in the canvas
 	private int width = 5; // Width of the canvas
 	private int height = 5; // Height of the canvas
-	public Vector3 cursor;
-	public bool focused = false; // Display the red lines if true
-	public Tuile[] tileobs;
-
-
+	private Vector3 cursor;
+	private bool focused = false; // Display the red lines if true
 	public Tuile currentTile = null;
+
+	[HideInInspector]
+	public Tuile[] tileobs;
 
 #if UNITY_EDITOR
 
 	static Tuile CreatePrefab(Tuile newtile, Vector2 pos)
 	{
+		// Create the tile
 		Tuile o = Instantiate(newtile);
 		o.transform.position = pos;
 		return o;
 	}
 
-	public void Restore()
-	{
-
-		tileobs = new Tuile[width * height];
-		int cnt = this.gameObject.transform.childCount;
-		List<Tuile> trash = new List<Tuile>();
-		for (int i = 0; i < cnt; i++)
-		{
-			Tuile tile = this.gameObject.transform.GetChild(i).gameObject.GetComponent<Tuile>();
-			Vector3 tilepos = tile.transform.localPosition;
-			int X = (int)(tilepos.x / gridsize);
-			int Y = (int)(tilepos.y / gridsize);
-			if (ValidCoords(X, Y))
-			{
-				tileobs[X + width * Y] = tile;
-			}
-			else
-			{
-				trash.Add(tile);
-			}
-		}
-		for (int i = 0; i < trash.Count; i++)
-		{
-			if (Application.isPlaying) { Destroy(trash[i]); } else { DestroyImmediate(trash[i]); }
-		}
-	}
-
-	public void Awake()
-	{
-		Restore();
-	}
-
-	public void OnEnable()
-	{
-		Restore();
-	}
 
 	void OnValidate()
 	{
@@ -82,6 +47,7 @@ public class MyTilePainter : MonoBehaviour
 		return new Vector3((int)(p.x / gridsize), (int)(p.y / gridsize), 0);
 	}
 
+	// Check if the point is inside the canvas
 	public bool ValidCoords(int x, int y)
 	{
 		if (tileobs == null) { return false; }
@@ -96,17 +62,21 @@ public class MyTilePainter : MonoBehaviour
 
 	public void Drag(Vector3 mouse, MyTileLayerEditor.TileOperation op)
 	{
-		// Initialization if t wasn't done before
+		// Initialization if it wasn't done before
 		if (tileobs == null | tileobs.Length == 0) {
-			Restore(); }
+			tileobs = new Tuile[width * height];
+		}
 
-		// If the cursor is inside the canvas
+			// If the cursor is inside the canvas
 		if (this.ValidCoords((int)cursor.x, (int)cursor.y))
 		{
 			// Destroy the previous tile if it exists (doesn't work...)
 			Debug.Log((int)cursor.x + width * (int)cursor.y);
 			Debug.Log(tileobs[(int)cursor.x + width * (int)cursor.y]);
-			DestroyImmediate(tileobs[(int)cursor.x + width * (int)cursor.y]);
+			if (tileobs[(int)cursor.x + width * (int)cursor.y] != null)
+			{
+				DestroyImmediate(tileobs[(int)cursor.x + width * (int)cursor.y].gameObject);
+			}
 
 			// If drawing mode
 			if (op == MyTileLayerEditor.TileOperation.Drawing)
@@ -154,6 +124,21 @@ public class MyTilePainter : MonoBehaviour
 		Gizmos.DrawWireCube(new Vector3((width * gridsize) * 0.5f - gridsize * 0.5f, (height * gridsize) * 0.5f - gridsize * 0.5f, 0f),
 			new Vector3(width * gridsize, (height * gridsize), 0f));
 	}
+
+	public bool isFocused()
+	{
+		return focused;
+	}
+
+	public void setFocused(bool _focused)
+	{
+		focused = _focused;
+	}
+
+	public void setCursor(Vector3 _cursor)
+	{
+		cursor = _cursor;
+	}
 #endif
 }
 
@@ -186,16 +171,16 @@ public class MyTileLayerEditor : Editor
 		if (Physics.Raycast(HandleUtility.GUIPointToWorldRay(Event.current.mousePosition), out hit, Mathf.Infinity) &&
 				hit.collider.GetComponentInParent<MyTilePainter>() == me)
 		{
-			// Autorize the display of the red line on the cursor
-			me.cursor = me.GridV3(hit.point);
-			me.focused = true;
+			// Round of the cursor
+			me.setCursor(me.GridV3(hit.point));
+			me.setFocused(true);
 
 
 			Renderer rend = me.gameObject.GetComponentInChildren<Renderer>();
 			if (rend) EditorUtility.SetSelectedRenderState(rend, EditorSelectedRenderState.Wireframe);
 			return true;
 		}
-		me.focused = false;
+		me.setFocused(false);
 		return false;
 	}
 
