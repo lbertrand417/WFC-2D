@@ -70,9 +70,7 @@ public class MyTilePainter : MonoBehaviour
 			// If the cursor is inside the canvas
 		if (this.ValidCoords((int)cursor.x, (int)cursor.y))
 		{
-			// Destroy the previous tile if it exists (doesn't work...)
-			Debug.Log((int)cursor.x + width * (int)cursor.y);
-			Debug.Log(tileobs[(int)cursor.x + width * (int)cursor.y]);
+			// Destroy the previous tile if it existss
 			if (tileobs[(int)cursor.x + width * (int)cursor.y] != null)
 			{
 				DestroyImmediate(tileobs[(int)cursor.x + width * (int)cursor.y].gameObject);
@@ -138,6 +136,16 @@ public class MyTilePainter : MonoBehaviour
 	public void setCursor(Vector3 _cursor)
 	{
 		cursor = _cursor;
+	}
+
+	public Tuile[] getCanvas()
+	{
+		return tileobs;
+	}
+
+	public int getGridsize()
+	{
+		return gridsize;
 	}
 #endif
 }
