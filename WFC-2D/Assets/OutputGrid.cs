@@ -130,21 +130,21 @@ public class OutputGridEditor : Editor
             List<Tuile>[] myGrid = new List<Tuile>[4];
 
             List<Tuile> list1 = new List<Tuile>();
-            list1.Add(me.globalList[2]);
+            list1.Add(me.globalList[4]);
             myGrid[0] = list1;
 
             List<Tuile> list2 = new List<Tuile>();
-            list2.Add(me.globalList[1]);
             list2.Add(me.globalList[2]);
+            list2.Add(me.globalList[5]);
             myGrid[1] = list2;
 
             List<Tuile> list3 = new List<Tuile>();
-            list3.Add(me.globalList[0]);
-            list3.Add(me.globalList[1]);
+            list3.Add(me.globalList[6]);
             myGrid[2] = list3;
 
             List<Tuile> list4 = new List<Tuile>();
             list4.Add(me.globalList[2]);
+            list4.Add(me.globalList[7]);
             myGrid[3] = list4;
 
             me.Clear();
