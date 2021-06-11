@@ -29,7 +29,8 @@ public class OutputGrid : MonoBehaviour
     {
         foreach (Tuile p in possibilities)
         {
-            if (myTuile.tilename.Equals(p.tilename))
+            //if (myTuile.tilename.Equals(p.tilename))
+            if (myTuile.GetInstanceID() == p.GetInstanceID())
             {
                 return true;
             }
