@@ -661,7 +661,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f9373509840a8f4d9c54f6b8549c719, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tilename: Croisement
+  tilename: 
 --- !u!212 &214800111
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -758,7 +758,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f9373509840a8f4d9c54f6b8549c719, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tilename: Nom
+  tilename: 
 --- !u!212 &237001285
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -855,7 +855,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f9373509840a8f4d9c54f6b8549c719, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tilename: droite
+  tilename: 
 --- !u!212 &272839788
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -966,7 +966,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f9373509840a8f4d9c54f6b8549c719, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tilename: virafe02
+  tilename: 
 --- !u!212 &273539379
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -1511,7 +1511,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f9373509840a8f4d9c54f6b8549c719, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tilename: virage03
+  tilename: 
 --- !u!212 &648744102
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -1788,7 +1788,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f9373509840a8f4d9c54f6b8549c719, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tilename: Croisement
+  tilename: 
 --- !u!212 &831829424
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -2695,7 +2695,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f9373509840a8f4d9c54f6b8549c719, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tilename: Croisement
+  tilename: 
 --- !u!212 &1526508360
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -2960,7 +2960,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f9373509840a8f4d9c54f6b8549c719, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tilename: virage15
+  tilename: 
 --- !u!212 &1559394180
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -3057,7 +3057,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f9373509840a8f4d9c54f6b8549c719, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tilename: boutdroite
+  tilename: 
 --- !u!212 &1597687202
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -3154,7 +3154,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f9373509840a8f4d9c54f6b8549c719, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tilename: boutdroite
+  tilename: 
 --- !u!212 &1615893442
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -3303,6 +3303,49 @@ Transform:
   m_Children: []
   m_Father: {fileID: 2031478919}
   m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1727328523
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1727328525}
+  - component: {fileID: 1727328524}
+  m_Layer: 0
+  m_Name: SimpleTiledModelRules
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1727328524
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1727328523}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9820c0bafc021203e957202bee33bef0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &1727328525
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1727328523}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.1846752, y: -0.1598011, z: -0.72736377}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 13
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1830665091
 GameObject:
@@ -3902,7 +3945,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f9373509840a8f4d9c54f6b8549c719, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tilename: virage14
+  tilename: 
 --- !u!212 &2096265049
 SpriteRenderer:
   m_ObjectHideFlags: 0
