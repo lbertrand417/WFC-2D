@@ -1,8 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Tilemaps;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
-
+[RequireComponent(typeof(MyTilePainter))]
 public class SimpleTiledModelRules : MonoBehaviour
 {
     private static int NUM_DIRECTIONS = 4;
@@ -16,44 +20,28 @@ public class SimpleTiledModelRules : MonoBehaviour
 
     //private MyTilePainter myTilePainter;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        //tiles = myTilePainter.getCanvas();
-        Debug.Log("SimpleTiledModelRules test log");
-        sampleTiles();
-        generateIndices();
-        testGenerateIndices();
-        generateRules();
-    }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    /*
+        check(t1, t2, left)
+        [t1][t2]
 
-/*
-    check(t1, t2, left)
-    [t1][t2]
+        check(t1, t2, right)
+        [t2][t1]
 
-    check(t1, t2, right)
-    [t2][t1]
+        check(t1, t2, top)
+        [t1]
+        [t2]
 
-    check(t1, t2, top)
-    [t1]
-    [t2]
-
-    check(t1, t2, bottom)
-    [t2]
-    [t1]
-*/
+        check(t1, t2, bottom)
+        [t2]
+        [t1]
+    */
     bool check(Tuile tile1, Tuile tile2, Direction direction)
     {
         return rules[tileIndices[tile1], tileIndices[tile2], (int) direction];
     }
 
-    void generateRules()
+    public void generateRules()
     {
         rules = new bool[numTiles, numTiles, NUM_DIRECTIONS];
         int rightCheck = width - 1;
@@ -86,7 +74,7 @@ public class SimpleTiledModelRules : MonoBehaviour
         }
     }
 
-    void generateIndices()
+    public void generateIndices()
     {
         tileIndices = new Dictionary<Tuile, int>();
         numTiles = 0;
@@ -108,7 +96,7 @@ public class SimpleTiledModelRules : MonoBehaviour
 3 3 3
 1 1 1
 */
-    void sampleTiles()
+    public void sampleTiles()
     {
         GameObject go = new GameObject();
         Tuile t0 = go.AddComponent<Tuile>();
@@ -124,7 +112,7 @@ public class SimpleTiledModelRules : MonoBehaviour
         tiles = new Tuile[] {t0, t0, t1, t2, t1, t1, t3, t3, t3, t1, t1, t1};
     }
 
-    void testSampleTiles()
+    public void testSampleTiles()
     {
         foreach (Tuile tile in tiles)
         {
@@ -132,7 +120,7 @@ public class SimpleTiledModelRules : MonoBehaviour
         }
     }
 
-    void testGenerateIndices()
+    public void testGenerateIndices()
     {
         foreach (KeyValuePair<Tuile, int> pair in tileIndices)
         {
@@ -140,4 +128,47 @@ public class SimpleTiledModelRules : MonoBehaviour
         }
         Debug.Log("numTiles " + numTiles);
     }
+
+    public void setTiles(Tuile[] t)
+    {
+        tiles = t;
+    }
+
+    public void setWidth(int w)
+    {
+        width = w;
+    }
+
+    public void setHeight(int h)
+    {
+        height = h;
+    }
 }
+
+#if UNITY_EDITOR
+[CustomEditor(typeof(SimpleTiledModelRules))]
+public class SimpleTiledModelRulesEditor : Editor
+{
+
+    public override void OnInspectorGUI()
+    {
+        SimpleTiledModelRules me = (SimpleTiledModelRules)target;
+        GUILayout.Label("The canvas must be entirely filled up");
+        GUILayout.Label("Generate Rules        : Generate rules using the canvas");
+        if (GUILayout.Button("Generate Rules"))
+        {
+
+            me.setTiles(me.GetComponent<MyTilePainter>().tileobs);
+            me.setWidth(me.GetComponent<MyTilePainter>().width);
+            me.setHeight(me.GetComponent<MyTilePainter>().height);
+
+            me.testSampleTiles();
+            //me.sampleTiles();
+            me.generateIndices();
+            //me.testGenerateIndices();
+            me.generateRules();
+        }
+        DrawDefaultInspector();
+    }
+}
+#endif
