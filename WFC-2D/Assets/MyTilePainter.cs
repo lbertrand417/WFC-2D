@@ -5,6 +5,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.Tilemaps;
 using Unity.VisualScripting;
+using UnityEditor.SceneTemplate;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -14,13 +15,15 @@ public class MyTilePainter : MonoBehaviour
 {
 
 	private int gridsize = 1; // Size of one tile in the canvas
-	private int width = 5; // Width of the canvas
-	private int height = 5; // Height of the canvas
+	public int width = 3; // Width of the canvas
+	private int oldWidth = 3; 
+	public int height = 4; // Height of the canvas
+	private int oldHeight = 4;
 	private Vector3 cursor;
 	private bool focused = false; // Display the red lines if true
 	public Tuile currentTile = null;
 
-	[HideInInspector]
+	//[HideInInspector]
 	public Tuile[] tileobs;
 
 #if UNITY_EDITOR
@@ -39,6 +42,55 @@ public class MyTilePainter : MonoBehaviour
 		BoxCollider bounds = this.GetComponent<BoxCollider>();
 		bounds.center = new Vector3((width * gridsize) * 0.5f - gridsize * 0.5f, (height * gridsize) * 0.5f - gridsize * 0.5f, 0f);
 		bounds.size = new Vector3(width * gridsize, (height * gridsize), 0f);
+
+		if (height > 0 && width > 0)
+		{
+			if (oldHeight != height)
+			{
+				int diff = -(oldHeight - height) * gridsize;
+
+				Tuile[] temp = new Tuile[width * height];
+
+				for (int i = 0; i < tileobs.Length; i++)
+				{
+					if (tileobs[i] != null)
+					{
+						tileobs[i].transform.position = new Vector2(tileobs[i].transform.position.x, tileobs[i].transform.position.y + diff);
+						if (i + diff * width < temp.Length && i + diff * width >= 0)
+						{
+							temp[i + diff * width] = tileobs[i];
+						}
+					}
+				}
+
+				oldHeight = height;
+				tileobs = temp;
+
+			}
+
+			if (oldWidth != width)
+			{
+				int diff = - (oldWidth - width) * gridsize;
+
+				Tuile[] temp = new Tuile[width * height];
+
+				for (int i = 0; i < tileobs.Length; i++)
+				{
+					if (tileobs[i] != null)
+					{
+						// Gérer les bords à droite
+						if (i % oldWidth < width)
+						{
+							temp[i + (int) diff * i / oldWidth] = tileobs[i];
+						}
+					}
+				}
+
+				oldWidth = width;
+				tileobs = temp;
+
+			}
+		}
 	}
 
 	public Vector3 GridV3(Vector3 pos)
@@ -70,7 +122,7 @@ public class MyTilePainter : MonoBehaviour
 			// If the cursor is inside the canvas
 		if (this.ValidCoords((int)cursor.x, (int)cursor.y))
 		{
-			// Destroy the previous tile if it existss
+			// Destroy the previous tile if it exists
 			if (tileobs[(int)cursor.x + width * (int)cursor.y] != null)
 			{
 				DestroyImmediate(tileobs[(int)cursor.x + width * (int)cursor.y].gameObject);
@@ -87,6 +139,34 @@ public class MyTilePainter : MonoBehaviour
 				o.transform.parent = this.gameObject.transform;
 				o.transform.localPosition = (cursor * gridsize);
 				tileobs[(int)cursor.x + width * (int)cursor.y] = o;
+			}
+		}
+	}
+
+	bool inCanvas(Tuile t)
+	{
+		foreach (Tuile tile in tileobs)
+		{
+			if (tile != null)
+			{
+				if (t.GetInstanceID() == tile.GetInstanceID())
+				{
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	public void Clean()
+	{
+		int childs = this.gameObject.transform.childCount;
+		for (int i = childs - 1; i >= 0; i--)
+		{
+			Debug.Log(inCanvas(this.gameObject.transform.GetChild(i).GetComponent<Tuile>()));
+			if (!inCanvas(this.gameObject.transform.GetChild(i).GetComponent<Tuile>()))
+			{
+				DestroyImmediate(this.gameObject.transform.GetChild(i).gameObject);
 			}
 		}
 	}
@@ -162,7 +242,13 @@ public class MyTileLayerEditor : Editor
 	{
 		MyTilePainter me = (MyTilePainter) target;
 		GUILayout.Label("Assign a prefab to the tile object");
-		GUILayout.Label("drag        : paint tiles");
+		GUILayout.Label("Drag        : Paint tiles");
+		GUILayout.Label("CLEAN        : Remove tiles outside of the canvas");
+		GUILayout.Label("CLEAR        : Delete all tile objects children of the canvas");
+		if (GUILayout.Button("CLEAN"))
+		{
+			me.Clean();
+		}
 		if (GUILayout.Button("CLEAR"))
 		{
 			me.Clear();
