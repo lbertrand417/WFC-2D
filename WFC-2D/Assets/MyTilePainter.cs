@@ -163,7 +163,6 @@ public class MyTilePainter : MonoBehaviour
 		int childs = this.gameObject.transform.childCount;
 		for (int i = childs - 1; i >= 0; i--)
 		{
-			Debug.Log(inCanvas(this.gameObject.transform.GetChild(i).GetComponent<Tuile>()));
 			if (!inCanvas(this.gameObject.transform.GetChild(i).GetComponent<Tuile>()))
 			{
 				DestroyImmediate(this.gameObject.transform.GetChild(i).gameObject);
