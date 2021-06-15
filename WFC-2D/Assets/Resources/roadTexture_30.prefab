@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 432746120869403736}
   - component: {fileID: 1034834477900212454}
-  - component: {fileID: -5974803043163366971}
+  - component: {fileID: -7195776794828114198}
   m_Layer: 0
   m_Name: roadTexture_30
   m_TagString: Untagged
@@ -84,7 +84,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &-5974803043163366971
+--- !u!114 &-7195776794828114198
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

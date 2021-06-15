@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2579922049860499396}
   - component: {fileID: 2222477904338336895}
-  - component: {fileID: 6395201486928308632}
+  - component: {fileID: 1508394960426089894}
   m_Layer: 0
   m_Name: roadTexture_02
   m_TagString: Untagged
@@ -84,7 +84,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &6395201486928308632
+--- !u!114 &1508394960426089894
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -96,4 +96,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f9373509840a8f4d9c54f6b8549c719, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tilename: Tile 2
+  tilename: 

@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4576560193153091671}
   - component: {fileID: 3285564723186495567}
-  - component: {fileID: -2158210429171029516}
+  - component: {fileID: -9091813308042219541}
   m_Layer: 0
   m_Name: roadTexture_45
   m_TagString: Untagged
@@ -84,7 +84,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &-2158210429171029516
+--- !u!114 &-9091813308042219541
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -96,4 +96,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f9373509840a8f4d9c54f6b8549c719, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tilename: boutgauche
+  tilename: 

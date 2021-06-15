@@ -132,7 +132,25 @@ public class SimpleTiledModelRules : MonoBehaviour
 
     public void testGenerateRules()
     {
-        foreach()
+        string[] tileNames = new string[numTiles];
+        foreach (KeyValuePair<Tuile, int> pair in tileIndices)
+        {
+            Debug.Log("Tile " + pair.Key.gameObject.name + " index " + pair.Value);
+            tileNames[pair.Value] = pair.Key.gameObject.name;
+        }
+        for (int t1 = 0; t1 < numTiles; ++t1)
+        {
+            for (int t2 = 0; t2 < numTiles; ++t2)
+            {
+                for (int d = 0; d < 4; ++d)
+                {
+                    if (rules[t1, t2, d])
+                    {
+                        Debug.Log("t1: " + tileNames[t1] + ", t2: " + tileNames[t2] + ", d: " + d);
+                    }
+                }
+            }
+        }
     }
 
     public void setTiles(Tuile[] t)
@@ -173,6 +191,7 @@ public class SimpleTiledModelRulesEditor : Editor
             me.generateIndices();
             //me.testGenerateIndices();
             me.generateRules();
+            me.testGenerateRules();
         }
         DrawDefaultInspector();
     }

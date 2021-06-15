@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3644125404948408508}
   - component: {fileID: 1452390613241799253}
-  - component: {fileID: -6395883161374279409}
+  - component: {fileID: -8426820473194223717}
   m_Layer: 0
   m_Name: roadTexture_46
   m_TagString: Untagged
@@ -84,7 +84,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &-6395883161374279409
+--- !u!114 &-8426820473194223717
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -96,4 +96,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f9373509840a8f4d9c54f6b8549c719, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tilename: boutdroite
+  tilename: 
