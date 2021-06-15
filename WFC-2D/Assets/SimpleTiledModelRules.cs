@@ -76,7 +76,8 @@ public class SimpleTiledModelRules : MonoBehaviour
 
     public void generateIndices()
     {
-        tileIndices = new Dictionary<Tuile, int>();
+        TuileEqualityComparer equalityComparer = new TuileEqualityComparer();
+        tileIndices = new Dictionary<Tuile, int>(equalityComparer);
         numTiles = 0;
         foreach (Tuile tile in tiles)
         {
@@ -85,7 +86,7 @@ public class SimpleTiledModelRules : MonoBehaviour
                 tileIndices.Add(tile, numTiles++);
             }
         }
-        Debug.Log(numTiles);
+        Debug.Log("numTiles = " + numTiles);
     }
 
 
@@ -127,6 +128,11 @@ public class SimpleTiledModelRules : MonoBehaviour
             Debug.Log(pair.Key.tilename + " " + pair.Value);
         }
         Debug.Log("numTiles " + numTiles);
+    }
+
+    public void testGenerateRules()
+    {
+        foreach()
     }
 
     public void setTiles(Tuile[] t)
