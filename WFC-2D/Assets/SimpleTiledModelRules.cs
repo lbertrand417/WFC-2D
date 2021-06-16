@@ -45,7 +45,7 @@ public class SimpleTiledModelRules : MonoBehaviour
     {
         rules = new bool[numTiles, numTiles, NUM_DIRECTIONS];
         int rightCheck = width - 1;
-        int bottomCheck = tiles.Length - width;
+        int topCheck = tiles.Length - width;
         for (int i = 0; i < tiles.Length; ++i)
         {
             // left
@@ -57,19 +57,19 @@ public class SimpleTiledModelRules : MonoBehaviour
             // right
             if (i % width != rightCheck)
             {
-                rules[tileIndices[tiles[i]], tileIndices[tiles[i + 1]], (int) Direction.Right] = true;
-            }
-
-            // top
-            if (i >= width)
-            {
-                rules[tileIndices[tiles[i - width]], tileIndices[tiles[i]], (int) Direction.Top] = true;
+                rules[tileIndices[tiles[i + 1]], tileIndices[tiles[i]], (int) Direction.Right] = true;
             }
 
             // bottom
-            if (i < bottomCheck)
+            if (i >= width)
             {
-                rules[tileIndices[tiles[i]], tileIndices[tiles[i + width]], (int) Direction.Bottom] = true;
+                rules[tileIndices[tiles[i - width]], tileIndices[tiles[i]], (int) Direction.Bottom] = true;
+            }
+
+            // top
+            if (i < topCheck)
+            {
+                rules[tileIndices[tiles[i + width]], tileIndices[tiles[i]], (int) Direction.Top] = true;
             }
         }
     }
@@ -133,6 +133,7 @@ public class SimpleTiledModelRules : MonoBehaviour
     public void testGenerateRules()
     {
         string[] tileNames = new string[numTiles];
+        string[] directions = new string[] {"Left", "Right", "Top", "Bottom"};
         foreach (KeyValuePair<Tuile, int> pair in tileIndices)
         {
             Debug.Log("Tile " + pair.Key.gameObject.name + " index " + pair.Value);
@@ -142,11 +143,11 @@ public class SimpleTiledModelRules : MonoBehaviour
         {
             for (int t2 = 0; t2 < numTiles; ++t2)
             {
-                for (int d = 0; d < 4; ++d)
+                for (int d = 0; d < NUM_DIRECTIONS; ++d)
                 {
                     if (rules[t1, t2, d])
                     {
-                        Debug.Log("t1: " + tileNames[t1] + ", t2: " + tileNames[t2] + ", d: " + d);
+                        Debug.Log("t1 = " + tileNames[t1] + ", t2 = " + tileNames[t2] + ", d = " + directions[d]);
                     }
                 }
             }
