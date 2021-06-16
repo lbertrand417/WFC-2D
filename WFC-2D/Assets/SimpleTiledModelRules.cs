@@ -36,7 +36,7 @@ public class SimpleTiledModelRules : MonoBehaviour
         [t2]
         [t1]
     */
-    bool check(Tuile tile1, Tuile tile2, Direction direction)
+    public bool check(Tuile tile1, Tuile tile2, Direction direction)
     {
         return rules[tileIndices[tile1], tileIndices[tile2], (int) direction];
     }
