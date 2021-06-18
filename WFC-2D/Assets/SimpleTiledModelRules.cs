@@ -16,6 +16,7 @@ public class SimpleTiledModelRules : MonoBehaviour
     private int width;
     private int height;
     private Dictionary<Tuile, int> tileIndices;
+    private List<Tuile> indexTiles;
     private int numTiles;
     private bool[,,] rules;
 
@@ -46,6 +47,11 @@ public class SimpleTiledModelRules : MonoBehaviour
     public Dictionary<Tuile, int> getDict()
     {
         return tileIndices;
+    }
+
+    public List<Tuile> getTuiles()
+    {
+        return indexTiles;
     }
 
     public bool check(Tuile tile1, Tuile tile2, Direction direction)
@@ -91,10 +97,12 @@ public class SimpleTiledModelRules : MonoBehaviour
         TuileEqualityComparer equalityComparer = new TuileEqualityComparer();
         tileIndices = new Dictionary<Tuile, int>(equalityComparer);
         numTiles = 0;
+        indexTiles = new List<Tuile>();
         foreach (Tuile tile in tiles)
         {
             if (!tileIndices.ContainsKey(tile))
             {
+                indexTiles.Add(tile);
                 tileIndices.Add(tile, numTiles++);
             }
         }
@@ -137,7 +145,7 @@ public class SimpleTiledModelRules : MonoBehaviour
     {
         foreach (KeyValuePair<Tuile, int> pair in tileIndices)
         {
-            Debug.Log(pair.Key.tilename + " " + pair.Value);
+            Debug.Log(pair.Key.gameObject.name + " " + pair.Value + " " + indexTiles[pair.Value]);
         }
         Debug.Log("numTiles " + numTiles);
     }
@@ -199,12 +207,12 @@ public class SimpleTiledModelRulesEditor : Editor
             me.setWidth(me.GetComponent<MyTilePainter>().width);
             me.setHeight(me.GetComponent<MyTilePainter>().height);
 
-            me.testSampleTiles();
+            // me.testSampleTiles();
             //me.sampleTiles();
             me.generateIndices();
-            //me.testGenerateIndices();
+            // me.testGenerateIndices();
             me.generateRules();
-            me.testGenerateRules();
+            // me.testGenerateRules();
         }
         DrawDefaultInspector();
     }
