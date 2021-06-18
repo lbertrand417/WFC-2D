@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using System.Linq;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -36,6 +37,17 @@ public class SimpleTiledModelRules : MonoBehaviour
         [t2]
         [t1]
     */
+
+    public bool[,,] getRules()
+    {
+        return rules;
+    }
+
+    public Dictionary<Tuile, int> getDict()
+    {
+        return tileIndices;
+    }
+
     public bool check(Tuile tile1, Tuile tile2, Direction direction)
     {
         return rules[tileIndices[tile1], tileIndices[tile2], (int) direction];
