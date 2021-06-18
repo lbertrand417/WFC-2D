@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 using UnityEngine;
 
 public class Program : MonoBehaviour
@@ -7,6 +10,13 @@ public class Program : MonoBehaviour
 
     public SimpleTiledModelRules rules;
     public List<Tuile> dictTuile;
+
+    private OutputGrid outputDisplay; 
+
+    public bool showIterations;
+    public int step;
+    private int iterations = 0;
+
         
     public static bool[,] grid = new bool[9,3] { 
                 {true, true,true}, 
@@ -157,6 +167,15 @@ public class Program : MonoBehaviour
         //     }
         // }
 
+    public List<Tuile> fromGridToList()
+    {
+        for (int i = 0; i < w*h; i++)
+        {
+
+        }
+        return null;
+    }
+
     public void Run()
     {
         // Console.WriteLine("Hello World!");
@@ -214,6 +233,12 @@ public class Program : MonoBehaviour
                 }
             }
             WFC(index);
+
+            if(showIterations && iterations % step == 0)
+            {
+                outputDisplay = new OutputGrid();
+                //outputDisplay.UpdateGrid(tuiles, dictTuile);
+            }
         }
 
 
@@ -221,9 +246,23 @@ public class Program : MonoBehaviour
     }   
 }
 
+#if UNITY_EDITOR
+[CustomEditor(typeof(Program))]
+public class ProgramEditor : Editor
+{
+    public override void OnInspectorGUI()
+    {
+        Program me = (Program)target;
+        if (GUILayout.Button("RUN"))
+        {
+            me.Run();
+        }
+        DrawDefaultInspector();
+    }
+}
+#endif
 
 
 
-        
 
 
