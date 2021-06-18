@@ -9,7 +9,7 @@ public class Program : MonoBehaviour
 {
 
     public SimpleTiledModelRules rules;
-    public List<Tuile> dictTuile;
+    private List<Tuile> listTuile;
 
     private OutputGrid outputDisplay; 
 
@@ -62,29 +62,28 @@ public class Program : MonoBehaviour
     public static int h=3;
 
     static void DisplayGrid(){
-    // Console.WriteLine(grid.Length);
+    // Debug.Log(grid.Length);
     for(int i = 0; i<h; i++){
-        Console.Write("ligne "+ i.ToString()+ " :  ");
+        Debug.Log("ligne "+ i.ToString()+ " :  ");
         for(int j=0; j<w; j++){
             int index = i*w + j;
             for(int z=0; z<3; z++){ // Nombre de tile
-            if(z!=0) Console.Write(",");
-            Console.Write(grid[index,z]);
+            if(z!=0) Debug.Log(",");
+            Debug.Log(grid[index,z]);
             }
-            Console.Write("  ");
         }
-        Console.WriteLine();
     }
     }
     public bool sparse(int x, int voisin, Direction d){
         bool changement = false;
         bool[] result = {false,false,false};
+        Debug.Log(rules.getRules());
         for(int i =0;i< rules.getRules().GetLength(0);i++){
             for(int a=0;a<3;a++){ // Nombre tiles
                 if (grid[x,a]){
                     for (int b = 0; b < 3; b ++)
                     {
-                        result[b] = rules.check(dictTuile[a], dictTuile[b], d);
+                        result[b] = rules.check(listTuile[a], listTuile[b], d);
                     }
                     /*if(rules[i,0]==a && rules[i,2]==d){
                         result[rules[i,1]] = true;
@@ -98,7 +97,7 @@ public class Program : MonoBehaviour
             if(!result[j] && grid[voisin,j]){
                 changement = true;
                 grid[voisin,j]=false;
-                Console.Write("pop("+voisin+","+j+")");
+                Debug.Log("pop("+voisin+","+j+")");
             }
         }
                 
@@ -108,7 +107,7 @@ public class Program : MonoBehaviour
     }
 
     public void WFC(int x){
-        Console.WriteLine("examine "+ x);
+        Debug.Log("examine "+ x);
         DisplayGrid();
         // examine(x);
 
@@ -178,17 +177,19 @@ public class Program : MonoBehaviour
 
     public void Run()
     {
-        // Console.WriteLine("Hello World!");
+        // Debug.Log("Hello World!");
 
 
-        // Console.Write(grid);
-        // for (int i = 0; i < visited.Length; i++) { Console.Write(visited[i]); }
-        // Console.WriteLine(visited[1]);
+        // Debug.Log(grid);
+        // for (int i = 0; i < visited.Length; i++) { Debug.Log(visited[i]); }
+        // Debug.Log(visited[1]);
         // DisplayGrid();
-            // Console.WriteLine(rules.GetLength(0));
-            // Console.WriteLine(rules[1,]);
-           
+        // Debug.Log(rules.GetLength(0));
+        // Debug.Log(rules[1,]);
+
         // DisplayGrid();
+
+        listTuile = rules.getTuiles();
 
         //on choisit 0
         grid[0,1]= false;
@@ -221,7 +222,7 @@ public class Program : MonoBehaviour
                 }
             }
             if(!flagcontinuer){ break;}
-            Console.WriteLine("nouveau WFC sur "+index);
+            Debug.Log("nouveau WFC sur "+index);
             System.Random aleatoire = new System.Random();
             int a = aleatoire.Next(mins);
             for(int i =0; i<3; i++){ // Nombre tile
