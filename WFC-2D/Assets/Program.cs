@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -11,14 +12,19 @@ public class Program : MonoBehaviour
     public SimpleTiledModelRules rules;
     private List<Tuile> listTuile;
 
+    public int width = 3;
+    public int height = 3;
+
     private OutputGrid outputDisplay; 
 
     public bool showIterations;
     public int step;
     private int iterations = 0;
 
+    private bool[,] grid;
+
         
-    public static bool[,] grid = new bool[9,3] { 
+    /*public static bool[,] grid = new bool[9,3] { 
                 {true, true,true}, 
                 {true, true,true}, 
                 {true, true,true}, 
@@ -28,7 +34,7 @@ public class Program : MonoBehaviour
                 {true, true,true}, 
                 {true, true,true}, 
                 {true, true,true}
-            };
+            };*/
     /*public static int[,] rules = {
             //0:up 1:right
                 {1,2,0},
@@ -190,6 +196,15 @@ public class Program : MonoBehaviour
         // DisplayGrid();
 
         listTuile = rules.getTuiles();
+        grid = new bool[width * height, listTuile.Count]; 
+
+        for (int i = 0; i < width * height; i++)
+        {
+            for (int j =  0; j < listTuile.Count; j++)
+            {
+                grid[i, j] = true;
+            }
+        }
 
         //on choisit 0
         grid[0,1]= false;
