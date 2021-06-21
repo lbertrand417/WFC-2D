@@ -6,6 +6,7 @@ using UnityEditor;
 #endif
 using UnityEngine;
 
+[RequireComponent(typeof(BoxCollider))]
 public class Program : MonoBehaviour
 {
 
@@ -14,6 +15,7 @@ public class Program : MonoBehaviour
 
     public int width = 3;
     public int height = 3;
+    public int gridsize = 1;
 
     private OutputGrid outputDisplay; 
 
@@ -21,7 +23,7 @@ public class Program : MonoBehaviour
     public int step;
     private int iterations = 0;
 
-    private bool[,] grid;
+    private static bool[,] grid;
 
         
     /*public static bool[,] grid = new bool[9,3] { 
@@ -67,7 +69,14 @@ public class Program : MonoBehaviour
     public static int w=3;
     public static int h=3;
 
-    static void DisplayGrid(){
+    void OnValidate()
+    {
+        BoxCollider bounds = this.GetComponent<BoxCollider>();
+        bounds.center = new Vector3((width * gridsize) * 0.5f - gridsize * 0.5f, (height * gridsize) * 0.5f - gridsize * 0.5f, 0f);
+        bounds.size = new Vector3(width * gridsize, (height * gridsize), 0f);
+    }
+
+        static void DisplayGrid(){
     // Debug.Log(grid.Length);
     for(int i = 0; i<h; i++){
         Debug.Log("ligne "+ i.ToString()+ " :  ");

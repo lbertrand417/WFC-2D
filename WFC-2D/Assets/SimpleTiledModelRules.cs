@@ -212,7 +212,7 @@ public class SimpleTiledModelRulesEditor : Editor
             me.generateIndices();
             // me.testGenerateIndices();
             me.generateRules();
-            // me.testGenerateRules();
+            me.testGenerateRules();
         }
         DrawDefaultInspector();
     }
