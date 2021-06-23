@@ -23,7 +23,7 @@ public class MyTilePainter : MonoBehaviour
 	private bool focused = false; // Display the red lines if true
 	public Tuile currentTile = null;
 
-	//[HideInInspector]
+	[HideInInspector]
 	public Tuile[] tileobs;
 
 #if UNITY_EDITOR

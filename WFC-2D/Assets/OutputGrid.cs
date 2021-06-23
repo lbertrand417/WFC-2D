@@ -7,21 +7,18 @@ using UnityEditor;
 using UnityEngine;
 
 [RequireComponent(typeof(BoxCollider))]
+[RequireComponent(typeof(WFC))]
 public class OutputGrid : MonoBehaviour
 {
 
-    public List<Tuile> globalList;
-
-    // Raw values
-    private int width = 2;
-    private int height = 2;
-    private int tileSize = 1;
-
-#if UNITY_EDITOR
     void OnValidate()
     {
-        // Should be in the "main" script
+        int width = this.gameObject.GetComponent<WFC>().width;
+        int height = this.gameObject.GetComponent<WFC>().height;
+        int tileSize = this.gameObject.GetComponent<WFC>().gridsize;
+
         BoxCollider bounds = this.GetComponent<BoxCollider>();
+        bounds.center = new Vector3((width * tileSize) * 0.5f - tileSize * 0.5f, (height * tileSize) * 0.5f - tileSize * 0.5f, 0f);
         bounds.size = new Vector3(width * tileSize, (height * tileSize), 0f);
     }
 
@@ -40,7 +37,13 @@ public class OutputGrid : MonoBehaviour
 
     public void UpdateGrid(List<Tuile>[] tuile, List<Tuile> dictTuile)
     {
+        // Delete the previous display
+        Clear();
+
         // Retrieve number of rows and cols and tilesize
+        int width = this.gameObject.GetComponent<WFC>().width;
+        int height = this.gameObject.GetComponent<WFC>().height;
+        int tileSize = this.gameObject.GetComponent<WFC>().gridsize;
 
         // Size of the canvas
         float gridW = width * tileSize;
@@ -55,10 +58,8 @@ public class OutputGrid : MonoBehaviour
                 // Second term + third term : translation of the entire tile grid to the corner of the canvas
                 //      - second term : center of the first tile to the corner of the canvas
                 //      - third term : shift to put the corner of the first tile to the corner of the canvas
-                float posX = col * tileSize - gridW / 2 + (float) tileSize / 2;
-                float posY = row * -tileSize + gridH / 2 - (float) tileSize / 2;
-
-                Debug.Log(tuile[col + width * row].Count);
+                float posX = col * tileSize;
+                float posY = row * -tileSize + gridH - tileSize;
 
                 // If final tile found
                 if (tuile[col + width * row].Count == 1)
@@ -115,44 +116,5 @@ public class OutputGrid : MonoBehaviour
             DestroyImmediate(this.gameObject.transform.GetChild(i).gameObject);
         }
     }
-#endif
 }
 
-#if UNITY_EDITOR
-[CustomEditor(typeof(OutputGrid))]
-public class OutputGridEditor : Editor
-{
-    public override void OnInspectorGUI()
-    {
-        OutputGrid me = (OutputGrid)target;
-        if (GUILayout.Button("RUN"))
-        {
-
-            List<Tuile>[] myGrid = new List<Tuile>[4];
-
-            List<Tuile> list1 = new List<Tuile>();
-            list1.Add(me.globalList[4]);
-            myGrid[0] = list1;
-
-            List<Tuile> list2 = new List<Tuile>();
-            list2.Add(me.globalList[2]);
-            list2.Add(me.globalList[5]);
-            myGrid[1] = list2;
-
-            List<Tuile> list3 = new List<Tuile>();
-            list3.Add(me.globalList[6]);
-            myGrid[2] = list3;
-
-            List<Tuile> list4 = new List<Tuile>();
-            list4.Add(me.globalList[2]);
-            list4.Add(me.globalList[7]);
-            myGrid[3] = list4;
-
-            me.Clear();
-            me.UpdateGrid(myGrid, me.globalList);
-        }
-        DrawDefaultInspector();
-    }
-
-}
-#endif

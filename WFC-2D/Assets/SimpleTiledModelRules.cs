@@ -54,6 +54,9 @@ public class SimpleTiledModelRules : MonoBehaviour
         return indexTiles;
     }
 
+    // Tile 1 : Neighbor
+    // Tile 2 : Tile at the center
+    // Tile 3 : Direction of the neighbor around the center tile
     public bool check(Tuile tile1, Tuile tile2, Direction direction)
     {
         return rules[tileIndices[tile1], tileIndices[tile2], (int) direction];
