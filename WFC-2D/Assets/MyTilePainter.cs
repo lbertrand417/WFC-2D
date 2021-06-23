@@ -16,10 +16,10 @@ public class MyTilePainter : MonoBehaviour
 {
 
 	private int gridsize = 1; // Size of one tile in the canvas
-	public int width; // Width of the canvas
-	private int oldWidth; 
-	public int height; // Height of the canvas
-	private int oldHeight;
+	public int width = 3; // Width of the canvas
+	private int oldWidth = 3; 
+	public int height = 3; // Height of the canvas
+	private int oldHeight = 3;
 	private Vector3 cursor;
 	private bool focused = false; // Display the red lines if inside the canvas
 	public Tuile currentTile = null; // Tile to draw
