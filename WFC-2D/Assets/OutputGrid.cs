@@ -6,21 +6,9 @@ using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 
-[RequireComponent(typeof(BoxCollider))]
 [RequireComponent(typeof(WFC))]
 public class OutputGrid : MonoBehaviour
 {
-
-    void OnValidate()
-    {
-        int width = this.gameObject.GetComponent<WFC>().width;
-        int height = this.gameObject.GetComponent<WFC>().height;
-        int tileSize = this.gameObject.GetComponent<WFC>().gridsize;
-
-        BoxCollider bounds = this.GetComponent<BoxCollider>();
-        bounds.center = new Vector3((width * tileSize) * 0.5f - tileSize * 0.5f, (height * tileSize) * 0.5f - tileSize * 0.5f, 0f);
-        bounds.size = new Vector3(width * tileSize, (height * tileSize), 0f);
-    }
 
     public bool isPossible(List<Tuile> possibilities, Tuile myTuile)
     {

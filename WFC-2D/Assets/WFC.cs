@@ -7,7 +7,7 @@ using UnityEditor;
 #endif
 using UnityEngine;
 
-//[RequireComponent(typeof(BoxCollider))]
+[RequireComponent(typeof(BoxCollider))]
 [RequireComponent(typeof(OutputGrid))]
 public class WFC : MonoBehaviour
 {
