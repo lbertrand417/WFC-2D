@@ -112,7 +112,12 @@ public class WFC : MonoBehaviour
         listTuile = rules.getTuiles();
         numberTiles = listTuile.Count;
 
-        if (Finished() || grid == null)
+        if (grid == null || grid.GetLength(0) != width * height)
+        {
+            Restart();
+        }
+
+        if (Finished())
         {
             Restart();
         }
@@ -173,7 +178,7 @@ public class WFC : MonoBehaviour
         listTuile = rules.getTuiles();
         numberTiles = listTuile.Count;
 
-        if(grid == null)
+        if(grid == null || grid.GetLength(0) != width * height)
         {
             Restart();
         }
@@ -196,8 +201,8 @@ public class WFC : MonoBehaviour
                 {
                     Debug.Log("aie une des cases n'a plus aucune possibilité");
                     // IMPORTANT il faudrait recommencer -> rappeler Run()
-                    Restart();
-                    RunOneStep();
+                    /*Restart();
+                    RunOneStep();*/
                     break;
                 }
                 if (s > 1)
