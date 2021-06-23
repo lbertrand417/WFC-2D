@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using UnityEngine.Tilemaps;
 using Unity.VisualScripting;
 using UnityEditor.SceneTemplate;
+using UnityEditor.Callbacks;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -15,16 +16,18 @@ public class MyTilePainter : MonoBehaviour
 {
 
 	private int gridsize = 1; // Size of one tile in the canvas
-	public int width = 3; // Width of the canvas
-	private int oldWidth = 3; 
-	public int height = 4; // Height of the canvas
-	private int oldHeight = 4;
+	public int width; // Width of the canvas
+	private int oldWidth; 
+	public int height; // Height of the canvas
+	private int oldHeight;
 	private Vector3 cursor;
-	private bool focused = false; // Display the red lines if true
-	public Tuile currentTile = null;
+	private bool focused = false; // Display the red lines if inside the canvas
+	public Tuile currentTile = null; // Tile to draw
 
 	[HideInInspector]
 	public Tuile[] tileobs;
+
+	private bool loadScript = true;
 
 #if UNITY_EDITOR
 
@@ -36,13 +39,26 @@ public class MyTilePainter : MonoBehaviour
 		return o;
 	}
 
-
 	void OnValidate()
 	{
+		// If the script is first loaded the oldHeight and oldWidth should be initialized correctly
+		if(loadScript)
+		{
+			oldHeight = height;
+			oldWidth = width;
+
+			loadScript = false;
+		}
+
 		BoxCollider bounds = this.GetComponent<BoxCollider>();
 		bounds.center = new Vector3((width * gridsize) * 0.5f - gridsize * 0.5f, (height * gridsize) * 0.5f - gridsize * 0.5f, 0f);
 		bounds.size = new Vector3(width * gridsize, (height * gridsize), 0f);
 
+		Debug.Log("Width : " + width);
+		Debug.Log("Old width : " + oldWidth);
+
+		Debug.Log("Height : " + height);
+		Debug.Log("Old height : " + oldHeight);
 		if (height > 0 && width > 0)
 		{
 			if (oldHeight != height)
@@ -240,7 +256,7 @@ public class MyTileLayerEditor : Editor
 	public override void OnInspectorGUI()
 	{
 		MyTilePainter me = (MyTilePainter) target;
-		GUILayout.Label("Assign a prefab to the tile object");
+		GUILayout.Label("Assign a prefab (should have script tile) to the tile object");
 		GUILayout.Label("Drag        : Paint tiles");
 		GUILayout.Label("CLEAN        : Remove tiles outside of the canvas");
 		GUILayout.Label("CLEAR        : Delete all tile objects children of the canvas");
