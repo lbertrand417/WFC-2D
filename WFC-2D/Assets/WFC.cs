@@ -198,6 +198,8 @@ public class WFC : MonoBehaviour
                 {
                     Debug.Log("aie une des cases n'a plus aucune possibilité");
                     // IMPORTANT il faudrait recommencer -> rappeler Run()
+                    Restart();
+                    RunOneStep();
                     break;
                 }
                 if (s > 1)
