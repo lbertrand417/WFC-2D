@@ -112,11 +112,9 @@ public class WFC : MonoBehaviour
         listTuile = rules.getTuiles();
         numberTiles = listTuile.Count;
 
-        grid = new bool[width * height, numberTiles]; 
-        for (int i = 0; i < width * height; i++){
-            for (int j =  0; j < numberTiles; j++){
-                grid[i, j] = true;
-            }
+        if (Finished() || grid == null)
+        {
+            Restart();
         }
 
         bool finished = false;
