@@ -164,7 +164,7 @@ public class WFC : MonoBehaviour
                     }
                 }
 
-                if (numberTrue > 1)
+                if (numberTrue != 1)
                 {
                     return false;
                 }
