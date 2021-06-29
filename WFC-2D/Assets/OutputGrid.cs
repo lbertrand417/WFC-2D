@@ -14,7 +14,6 @@ public class OutputGrid : MonoBehaviour
     {
         foreach (Tuile p in possibilities)
         {
-            //if (myTuile.tilename.Equals(p.tilename))
             if (myTuile.GetInstanceID() == p.GetInstanceID())
             {
                 return true;
@@ -42,10 +41,6 @@ public class OutputGrid : MonoBehaviour
             for (int col = 0; col < width; col++)
             {
                 // Give the position of the tile
-                // First term : Find the right location for the given "big" tile
-                // Second term + third term : translation of the entire tile grid to the corner of the canvas
-                //      - second term : center of the first tile to the corner of the canvas
-                //      - third term : shift to put the corner of the first tile to the corner of the canvas
                 float posX = col * tileSize;
                 float posY = row * -tileSize + gridH - tileSize;
 
@@ -83,9 +78,6 @@ public class OutputGrid : MonoBehaviour
                             //      - second term : center of the first "small" tile to the corner of the "big" tile
                             //      - third term : shift to put the corner of the first "small" tile to the corner of the "big" tile
                             // Fourth term : Find the right location for the given "small" tile
-                            /*float localPosX = posX - (float) divid / 2 * tile.transform.localScale.x + (float) tile.transform.localScale.x / 2 + indicex * tile.transform.localScale.x;
-                            float localPosY = posY + (float) divid / 2 * tile.transform.localScale.y - (float) tile.transform.localScale.y / 2 - indicey * tile.transform.localScale.y;*/
-
                             float localPosX = posX - (float) tileSize / 2 + (float)tile.transform.localScale.x / 2 + indicex * tile.transform.localScale.x;
                             float localPosY = posY + (float)tileSize / 2 - (float)tile.transform.localScale.y / 2 - indicey * tile.transform.localScale.y;
 

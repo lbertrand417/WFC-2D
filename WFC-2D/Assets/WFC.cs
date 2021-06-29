@@ -24,6 +24,8 @@ public class WFC : MonoBehaviour
 
     private static bool[,] grid;
 
+    private bool contradiction = false;
+
     void OnValidate()
     {
 
@@ -108,15 +110,21 @@ public class WFC : MonoBehaviour
 
     public void Run()
     {
-        Debug.Log("OK");
         listTuile = rules.getTuiles();
-        numberTiles = listTuile.Count;
 
-        if (grid == null || grid.GetLength(0) != width * height)
+        // If the grid isn't initialized yet restart
+        if (grid == null)
         {
             Restart();
         }
 
+        // If the variables have changed restart
+        if (grid.GetLength(0) != width * height || numberTiles != listTuile.Count)
+        {
+            Restart();
+        }
+
+        // If the previous output was found restart
         if (Finished())
         {
             Restart();
@@ -125,7 +133,12 @@ public class WFC : MonoBehaviour
         bool finished = false;
         while(!finished){
             RunOneStep();
-            finished = Finished();            
+            finished = Finished();
+            
+            if(contradiction)
+            {
+                break;
+            }
         }
 
         this.gameObject.GetComponent<OutputGrid>().UpdateGrid(fromGridToList(), rules.getTuiles());
@@ -134,6 +147,11 @@ public class WFC : MonoBehaviour
 
     public void Restart()
     {
+        // Initialize variables
+        contradiction = false;
+        listTuile = rules.getTuiles();
+        numberTiles = listTuile.Count;
+
         grid = new bool[width * height, numberTiles];
         for (int i = 0; i < width * height; i++)
         {
@@ -175,10 +193,18 @@ public class WFC : MonoBehaviour
 
     public void RunOneStep ()
     {
-        listTuile = rules.getTuiles();
-        numberTiles = listTuile.Count;
 
-        if(grid == null || grid.GetLength(0) != width * height)
+        // If there were a contradiction or the grid doesn't exist then restart
+        if (grid == null || contradiction)
+        {
+            Restart();
+        }
+
+        // If the size of the grid or if the size of the dictionnary of tiles changed restart
+        // The dictionnary is still reload in case the new one is different but has the same number of tiles
+        // TO DO: Must check the list itself because the dict will be reinitialized but not the grid
+        listTuile = rules.getTuiles();
+        if (grid.GetLength(0) != width * height || numberTiles != listTuile.Count)
         {
             Restart();
         }
@@ -200,9 +226,8 @@ public class WFC : MonoBehaviour
                 if (s == 0)
                 {
                     Debug.Log("aie une des cases n'a plus aucune possibilité");
-                    // IMPORTANT il faudrait recommencer -> rappeler Run()
-                    /*Restart();
-                    RunOneStep();*/
+                    // If s=0, then there's a contradiction.
+                    contradiction = true;
                     break;
                 }
                 if (s > 1)
@@ -220,25 +245,29 @@ public class WFC : MonoBehaviour
                 }
             }
 
-            System.Random aleatoire = new System.Random();
-            // b case random avec la plus petite entropie
-            int b = aleatoire.Next(entropy.Count);
-            int ind = entropy[b];
-            // tuile a choisi random parmis les 'true' de la case b
-            int a = aleatoire.Next(mins);
-            for (int i = 0; i < numberTiles; i++)
+            // The WFC must run only if there is no contradiction
+            if (!contradiction)
             {
-                if (grid[ind, i])
+                System.Random aleatoire = new System.Random();
+                // b case random avec la plus petite entropie
+                int b = aleatoire.Next(entropy.Count);
+                int ind = entropy[b];
+                // tuile a choisi random parmis les 'true' de la case b
+                int a = aleatoire.Next(mins);
+                for (int i = 0; i < numberTiles; i++)
                 {
-                    if (a != 0)
+                    if (grid[ind, i])
                     {
-                        grid[ind, i] = false;
+                        if (a != 0)
+                        {
+                            grid[ind, i] = false;
+                        }
+                        a--;
                     }
-                    a--;
                 }
-            }
 
-            WFCfunction(ind);
+                WFCfunction(ind);
+            }
         }
     }
 
