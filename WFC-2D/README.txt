@@ -1,3 +1,5 @@
+Unity version 2021.1.5f1
+
 2D VERSION:
 
 /!\ Data backup is not handled so when you reopen a scene it's better to restart from scratch
